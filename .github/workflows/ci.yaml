@@ -43,3 +43,13 @@ jobs:
         run: bandit -r app
       - name: Build Docker image 
         run: docker build -t infraforge-app:${{github.sha}} ./app
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+            image-ref: infraforge-app:${{github.sha}}
+            format: table
+            exit-code: 1
+            ignore-unfixed: true
+            severity: CRITICAL,HIGH
+            
+
