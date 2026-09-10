@@ -1,12 +1,10 @@
-from fastapi import FastAPI
 import os
 import socket
 from datetime import datetime, timezone
 
-app = FastAPI(
-    title="InfraForge Demo Application",
-    version="1.0.0"
-)
+from fastapi import FastAPI
+
+app = FastAPI(title="InfraForge Demo Application", version="1.0.0")
 
 
 @app.get("/")
@@ -17,20 +15,18 @@ def root():
         "version": os.getenv("APP_VERSION", "local"),
         "environment": os.getenv("ENVIRONMENT", "local"),
         "hostname": socket.gethostname(),
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
 @app.get("/health")
 def health():
-    return {
-        "status": "healthy"
-    }
+    return {"status": "healthy"}
 
 
 @app.get("/version")
 def version():
     return {
         "version": os.getenv("APP_VERSION", "local"),
-        "environment": os.getenv("ENVIRONMENT", "local")
+        "environment": os.getenv("ENVIRONMENT", "local"),
     }
