@@ -1,0 +1,29 @@
+<escape>name: Terraform Security Scan
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Scan Terraform plan
+        uses: fbrj33/tf-risk@v1
+        with:
+          plan: terraform/plan.json
+          fail-on: high
+          format: sarif
+
+      - name: Upload SARIF
+        if: always() && hashFiles('tf-risk.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: tf-risk.sarif</escape>
