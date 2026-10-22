@@ -1,6 +1,6 @@
 import os
 import socket
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from fastapi import FastAPI
 
@@ -15,7 +15,7 @@ def root():
         "version": os.getenv("APP_VERSION", "local"),
         "environment": os.getenv("ENVIRONMENT", "local"),
         "hostname": socket.gethostname(),
-        "timestamp": datetime.now(UTC).isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
