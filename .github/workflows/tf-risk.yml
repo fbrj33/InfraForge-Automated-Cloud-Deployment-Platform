@@ -1,4 +1,4 @@
-<escape>name: Terraform Security Scan
+name: Terraform Security Scan
 
 on:
   push:
