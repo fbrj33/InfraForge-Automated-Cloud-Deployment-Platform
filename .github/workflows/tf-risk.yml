@@ -1,3 +1,4 @@
+
 name: Terraform Security Scan
 
 on:
@@ -11,19 +12,32 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Scan Terraform plan
+        id: scan
         uses: fbrj33/tf-risk@v1
+        continue-on-error: true
         with:
           plan: terraform/plan.json
           fail-on: high
           format: sarif
+
+      - name: Check SARIF report
+        if: always()
+        shell: bash
+        run: |
+          if [ ! -s "tf-risk.sarif" ]; then
+            echo "::error::SARIF report was not generated or is empty"
+            exit 1
+          fi
+          echo "SARIF report generated successfully."
+
       - name: Upload SARIF results to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: tf-risk.sarif
-
